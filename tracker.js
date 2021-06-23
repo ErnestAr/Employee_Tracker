@@ -3,17 +3,14 @@ const mysql = require('mysql');
 
 const connection = mysql.createConnection({
   host: 'localhost',
-
   port: 3306,
-
   user: 'root',
   password: '',
   database: 'employees_db',
 });
 
 
-
- function Add() {
+function Add() {
     this.department = ( name) => {
         console.log('Inserting a new department...\n');
         const query = connection.query(
@@ -27,7 +24,6 @@ const connection = mysql.createConnection({
             init()
           }
         );
-
     }
     this.role = ( title, salary, department_id) => {
         console.log('Inserting a new role...\n');
@@ -37,7 +33,6 @@ const connection = mysql.createConnection({
             title: title,
             salary:salary,
             department_id: department_id,
-
           },
           (err, res) => {
             if (err) throw err;
@@ -92,18 +87,21 @@ function View() {
 }
 
 function Update() {
-    this.employee_roles = (input_name) => {
+    this.employee_roles = (input_name, role) => {
         console.log('Updating selected employee role...\n');
         const query = connection.query(
-          'UPDATE employees SET ? WHERE ?',
+          'UPDATE employees_db.roles INNER JOIN employees_db.employees ON employees.role_id =roles.id SET  ? WHERE  ?',
           [
             {
-              first_name: input_name,
+              title: role,
+            },
+            {
+              last_name: input_name,
             },
           ],
           (err, res) => {
             if (err) throw err;
-            console.log(`${res.affectedRows} employee updated!\n`);
+            console.log(`Employee role updated!\n`);
             init()
           }
         )
@@ -140,7 +138,7 @@ function Update() {
               new View().departments()
                 break;
             case "Update employee role by name":
-
+              updateEmployee()
                 break;
             default:
                 break;
@@ -151,7 +149,6 @@ function Update() {
   const addEmployee = () => {
     inquirer
       .prompt([
-
         {
             type: "input",
             name: "first_name",
@@ -172,10 +169,8 @@ function Update() {
             name: "manager_id",
             message: "Enter manager id.",
         },
-        
       ]).then((data) => {
         new Add().employee(data.first_name, data.last_name, data.role_id, data.manager_id)
-
       })
   };
 
@@ -183,7 +178,6 @@ function Update() {
   const addRole = () => {
     inquirer
       .prompt([
-
         {
             type: "input",
             name: "title",
@@ -199,10 +193,8 @@ function Update() {
             name: "department_id",
             message: "Enter department_id.",
         },
-        
       ]).then((data) => {
         new Add().role( data.title, data.salary, data.department_id)
-
       })
   };
 
@@ -210,18 +202,35 @@ function Update() {
   const addDepartment = () => {
     inquirer
       .prompt([
-
         {
             type: "input",
             name: "name",
             message: "Enter department name.",
         },
-        
       ]).then((data) => {
         new Add().department( data.name)
       })
   };
 
+  
+  const updateEmployee = () => {
+    inquirer
+      .prompt([
+        {
+            type: "input",
+            name: "ename",
+            message: "Enter employee's last name.",
+        },
+        {
+          type: "input",
+          name: "role",
+          message: "Enter new role.",
+      },
+      ]).then((data) => {
+        
+        new Update().employee_roles(data.ename, data.role)
+      })
+  };
 
 connection.connect((err) => {
     if (err) throw err;

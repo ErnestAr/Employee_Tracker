@@ -7,7 +7,6 @@ CREATE TABLE departments (
   id INTEGER  NOT NULL AUTO_INCREMENT,
   name VARCHAR(30) NOT NULL,
   PRIMARY KEY (id)
-
 );
 
 CREATE TABLE  roles (
@@ -42,14 +41,13 @@ VALUES ( "finance advisor", 65000, 4);
 INSERT INTO roles ( title, salary, department_id)
 VALUES ( "District manager", 60000, 3);
 INSERT INTO roles ( title, salary, department_id)
-VALUES ( "manager", 60000, 5 );
+VALUES ( "manager", 60000, 1);
 
 INSERT INTO employees ( first_name, last_name, role_id, manager_id)
-VALUES ( "Will", "Smith", 26, 12);
+VALUES ( "Will", "Smith", 2, 1);
 INSERT INTO employees ( first_name, last_name, role_id, manager_id)
-VALUES ( "Alex", "Courtie", 26, 13);
+VALUES ( "Alex", "Courtie", 2, 1);
 INSERT INTO employees ( first_name, last_name, role_id, manager_id)
-VALUES ( "Nick", "Lew", 26, 14);
+VALUES ( "Nick", "Lew", 3, 2);
 INSERT INTO employees ( first_name, last_name, role_id, manager_id)
-VALUES ( "Mr", "Anderson", 26, 15);
-
+VALUES ( "Mr", "Anderson", 4, 5);
