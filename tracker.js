@@ -21,7 +21,7 @@ function Add() {
           (err, res) => {
             if (err) throw err;
             console.log(`Department inserted to departments table!\n`);
-            init()
+            new View().departments()
           }
         );
     }
@@ -37,7 +37,7 @@ function Add() {
           (err, res) => {
             if (err) throw err;
             console.log(`role inserted to roles!\n`);
-            init()
+            new View().roles()
           }
         );
     }
@@ -54,7 +54,7 @@ function Add() {
           (err, res) => {
             if (err) throw err;
             console.log(`${first_name} ${last_name} inserted to employees!\n`);
-            init()
+            new View().employees()
           }
         );
     }
@@ -171,6 +171,7 @@ function Update() {
         },
       ]).then((data) => {
         new Add().employee(data.first_name, data.last_name, data.role_id, data.manager_id)
+
       })
   };
 
