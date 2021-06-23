@@ -84,6 +84,13 @@ function View() {
             init()
           });
     }
+    this.employee_role = () => {
+      connection.query('Select * From employees_db.roles inner JOIN employees_db.employees ON employees.role_id =roles.id', (err, res) => {
+          if (err) throw err;
+          console.table(res);
+          init()
+        });
+  }
 }
 
 function Update() {
@@ -102,7 +109,7 @@ function Update() {
           (err, res) => {
             if (err) throw err;
             console.log(`Employee role updated!\n`);
-            init()
+            new View().employee_role()
           }
         )
     }
