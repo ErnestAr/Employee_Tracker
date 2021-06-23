@@ -11,10 +11,6 @@ const connection = mysql.createConnection({
   database: 'employees_db',
 });
 
-connection.connect((err) => {
-    if (err) throw err;
-    console.log(`Connection to DB has been established.`);
-  });
 
 
  function Add() {
@@ -55,15 +51,15 @@ connection.connect((err) => {
         const query = connection.query(
           'INSERT INTO employees SET ?',
           {
-            id: id,
-             first_name: first_name,
+              id: id,
+              first_name: first_name,
               last_name: last_name, 
               role_id: role_id,
               manager_id: manager_id
           },
           (err, res) => {
             if (err) throw err;
-            console.log(`${res.affectedRows} employee inserted!\n`);
+            console.log(`${first_name} ${last_name} added to employees table!\n`);
           }
         );
     }
@@ -74,21 +70,21 @@ function View() {
         connection.query('SELECT * FROM departments', (err, res) => {
             if (err) throw err;
             console.table(res);
-            connection.end();
+
           });
     }
     this.roles = () => {
         connection.query('SELECT * FROM departments', (err, res) => {
             if (err) throw err;
             console.table(res);
-            connection.end();
+
           });
     }
-    this.employee = () => {
-        connection.query('SELECT * FROM employee', (err, res) => {
+    this.employees = () => {
+        connection.query('SELECT * FROM employees', (err, res) => {
             if (err) throw err;
             console.table(res);
-            connection.end();
+
           });
     }
 }
@@ -111,5 +107,85 @@ function Update() {
     }
   }
 
+  const init = () => {
+    inquirer
+      .prompt([
+        {
+          type: "list",
+          name: "option",
+          message: "Select option to edit or view employee_db database.",
+          choices: ["Add employee", "Add role", "Add department", "View employees", "View roles", "View departments", "Update employee role by name"],
+        },
+      ]).then((data) => {
+        switch (data.option) {
+            case "Add employee":
+                addEmployee()
 
+                break;
+            case  "Add role":
+                
+            break;
+            case "Add department":
+                new View().departments()
+                init()
+                break;
+            case "View employees":
+                new View().employees()
+                init()
+                break;
+            case "View roles":
+                new View().roles()
+                init()
+                break;
+            case "View departments":
+                
+                break;
+            case "Update employee role by name":
+                
+                break;
+            default:
+                break;
+        }
+      })
+  };
+
+  const addEmployee = () => {
+    inquirer
+      .prompt([
+        {
+          type: "input",
+          name: "id",
+          message: "Enter id.",
+        },
+        {
+            type: "input",
+            name: "first_name",
+            message: "Enter first name.",
+          },
+        {
+            type: "input",
+            name: "last_name",
+            message: "Enter last name.",
+        },
+        {
+            type: "input",
+            name: "role_id",
+            message: "Enter role id.",
+        },
+        {
+            type: "input",
+            name: "manager_id",
+            message: "Enter manager id.",
+        },
+        
+      ]).then((data) => {
+        new Add().employee(data.id, data.first_name, data.last_name, data.role_id, data.manager_id)
+      })
+  };
+
+connection.connect((err) => {
+    if (err) throw err;
+    console.log(`Connection to DB has been established.`);
+    init()
+  });
 
