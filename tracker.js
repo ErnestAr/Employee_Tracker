@@ -36,7 +36,7 @@ function Add() {
           },
           (err, res) => {
             if (err) throw err;
-            console.log(`role inserted to roles!\n`);
+            console.log(`role inserted to roles table!\n`);
             new View().roles()
           }
         );
@@ -71,7 +71,7 @@ function View() {
           });
     }
     this.roles = () => {
-        connection.query('SELECT * FROM departments', (err, res) => {
+        connection.query('SELECT * FROM roles', (err, res) => {
             if (err) throw err;
             console.table(res);
             init()
