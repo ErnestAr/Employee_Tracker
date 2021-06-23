@@ -14,27 +14,26 @@ const connection = mysql.createConnection({
 
 
  function Add() {
-    this.department = (id, name) => {
+    this.department = ( name) => {
         console.log('Inserting a new department...\n');
         const query = connection.query(
           'INSERT INTO departments SET ?',
           {
-            id: id,
             name: name
           },
           (err, res) => {
             if (err) throw err;
-            console.log(`${res.affectedRows} department inserted!\n`);
+            console.log(`Department inserted to departments table!\n`);
+            init()
           }
         );
 
     }
-    this.role = (id, title, salary, department_id) => {
+    this.role = ( title, salary, department_id) => {
         console.log('Inserting a new role...\n');
         const query = connection.query(
           'INSERT INTO roles SET ?',
           {
-            id: id,
             title: title,
             salary:salary,
             department_id: department_id,
@@ -42,16 +41,16 @@ const connection = mysql.createConnection({
           },
           (err, res) => {
             if (err) throw err;
-            console.log(`${res.affectedRows} role inserted!\n`);
+            console.log(`role inserted to roles!\n`);
+            init()
           }
         );
     }
-    this.employee = (id, first_name, last_name, role_id, manager_id) => {
+    this.employee = ( first_name, last_name, role_id, manager_id) => {
         console.log('Inserting a new employee...\n');
         const query = connection.query(
           'INSERT INTO employees SET ?',
           {
-              id: id,
               first_name: first_name,
               last_name: last_name, 
               role_id: role_id,
@@ -59,7 +58,8 @@ const connection = mysql.createConnection({
           },
           (err, res) => {
             if (err) throw err;
-            console.log(`${first_name} ${last_name} added to employees table!\n`);
+            console.log(`${first_name} ${last_name} inserted to employees!\n`);
+            init()
           }
         );
     }
@@ -68,23 +68,25 @@ const connection = mysql.createConnection({
 function View() {
     this.departments = () => {
         connection.query('SELECT * FROM departments', (err, res) => {
-            if (err) throw err;
+            if (err) {       
+              throw err;
+            }
             console.table(res);
-
+            init()
           });
     }
     this.roles = () => {
         connection.query('SELECT * FROM departments', (err, res) => {
             if (err) throw err;
             console.table(res);
-
+            init()
           });
     }
     this.employees = () => {
         connection.query('SELECT * FROM employees', (err, res) => {
             if (err) throw err;
             console.table(res);
-
+            init()
           });
     }
 }
@@ -102,6 +104,7 @@ function Update() {
           (err, res) => {
             if (err) throw err;
             console.log(`${res.affectedRows} employee updated!\n`);
+            init()
           }
         )
     }
@@ -120,28 +123,24 @@ function Update() {
         switch (data.option) {
             case "Add employee":
                 addEmployee()
-
                 break;
             case  "Add role":
-                
+                addRole()
             break;
             case "Add department":
-                new View().departments()
-                init()
+                addDepartment()
                 break;
             case "View employees":
                 new View().employees()
-                init()
                 break;
             case "View roles":
                 new View().roles()
-                init()
                 break;
             case "View departments":
-                
+              new View().departments()
                 break;
             case "Update employee role by name":
-                
+
                 break;
             default:
                 break;
@@ -152,11 +151,7 @@ function Update() {
   const addEmployee = () => {
     inquirer
       .prompt([
-        {
-          type: "input",
-          name: "id",
-          message: "Enter id.",
-        },
+
         {
             type: "input",
             name: "first_name",
@@ -179,13 +174,57 @@ function Update() {
         },
         
       ]).then((data) => {
-        new Add().employee(data.id, data.first_name, data.last_name, data.role_id, data.manager_id)
+        new Add().employee(data.first_name, data.last_name, data.role_id, data.manager_id)
+
       })
   };
+
+
+  const addRole = () => {
+    inquirer
+      .prompt([
+
+        {
+            type: "input",
+            name: "title",
+            message: "Enter title.",
+        },
+        {
+            type: "input",
+            name: "salary",
+            message: "Enter salary.",
+        },
+        {
+            type: "input",
+            name: "department_id",
+            message: "Enter department_id.",
+        },
+        
+      ]).then((data) => {
+        new Add().role( data.title, data.salary, data.department_id)
+
+      })
+  };
+
+
+  const addDepartment = () => {
+    inquirer
+      .prompt([
+
+        {
+            type: "input",
+            name: "name",
+            message: "Enter department name.",
+        },
+        
+      ]).then((data) => {
+        new Add().department( data.name)
+      })
+  };
+
 
 connection.connect((err) => {
     if (err) throw err;
     console.log(`Connection to DB has been established.`);
     init()
   });
-
